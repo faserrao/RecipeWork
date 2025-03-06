@@ -71,30 +71,11 @@ def extract_recipe(url):
     print("\n📝 recipe[ingredient_list]:")
     print(recipe["ingredient_list"])
 
-    recipe["parsed_ingredients"] = [parse_ingredient(i) for i in recipe["ingredient_list"]]
-
-    print("\n📝 Parsed Ingredients:")
-    print(recipe["parsed_ingredients"])
-
     instructions = soup.find_all(["li", "p"], class_=lambda x: x and "instruction" in x.lower())
     recipe["instructions"] = [step.get_text(strip=True) for step in instructions if step.get_text(strip=True)]
 
     return recipe
 
-def parse_ingredient(ingredient_text):
-    """Parses an ingredient string into amount, unit, and ingredient."""
-    pattern = re.compile(r"^(\S+)\s+(\S+)\s+(.+)$")  # Matches amount, unit, and ingredient
-    
-    if not ingredient_text:  # Ensure ingredient_text is valid
-        return {"amount": None, "unit": None, "ingredient": None}
-
-    match = pattern.match(ingredient_text.strip())
-    if match:
-        amount, unit, ingredient = match.groups()
-        return {"amount": amount, "unit": unit, "ingredient": ingredient}
-    else:
-        # If no match, assume missing amount or unit
-        return {"amount": None, "unit": None, "ingredient": ingredient_text.strip()}
 
 def display_recipe(recipe):
     """Displays extracted recipe information."""
